@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2013 Wireless Designs, LLC
- *
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,10 +8,10 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- *
+ * <p/>
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- *
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,13 +28,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.example.customview.R;
 
 public class BoxGridLayout extends ViewGroup {
 
     private static final int DEFAULT_COUNT = 1;
+    private static final String DEBUG_TAG = BoxGridLayout.class.getSimpleName();
+    private static final String TAG = BoxGridLayout.class.getSimpleName();
 
     private Paint mGridPaint;
 
@@ -65,6 +70,8 @@ public class BoxGridLayout extends ViewGroup {
         mGridPaint.setStyle(Paint.Style.STROKE);
         mGridPaint.setColor(strokeColor);
         mGridPaint.setStrokeWidth(strokeWidth);
+
+
     }
 
     @Override
@@ -90,7 +97,7 @@ public class BoxGridLayout extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int row, col, left, top;
-        for (int i=0; i < getChildCount(); i++) {
+        for (int i = 0; i < getChildCount(); i++) {
             row = i / mColumnCount;
             col = i % mColumnCount;
             View child = getChildAt(i);
@@ -107,18 +114,18 @@ public class BoxGridLayout extends ViewGroup {
         super.dispatchDraw(canvas);
 
         //Draw the grid lines
-        for (int i=0; i <= getWidth(); i += (getWidth() / mColumnCount)) {
+        for (int i = 0; i <= getWidth(); i += (getWidth() / mColumnCount)) {
             canvas.drawLine(i, 0, i, getHeight(), mGridPaint);
         }
-        for (int i=0; i <= getHeight(); i += (getHeight() / mColumnCount)) {
+        for (int i = 0; i <= getHeight(); i += (getHeight() / mColumnCount)) {
             canvas.drawLine(0, i, getWidth(), i, mGridPaint);
         }
     }
 
     @Override
     public void addView(View child) {
-        if (getChildCount() > mMaxChildren-1) {
-            throw new IllegalStateException("BoxGridLayout cannot have more than "+mMaxChildren+" direct children");
+        if (getChildCount() > mMaxChildren - 1) {
+            throw new IllegalStateException("BoxGridLayout cannot have more than " + mMaxChildren + " direct children");
         }
 
         super.addView(child);
@@ -126,8 +133,8 @@ public class BoxGridLayout extends ViewGroup {
 
     @Override
     public void addView(View child, int index) {
-        if (getChildCount() > mMaxChildren-1) {
-            throw new IllegalStateException("BoxGridLayout cannot have more than "+mMaxChildren+" direct children");
+        if (getChildCount() > mMaxChildren - 1) {
+            throw new IllegalStateException("BoxGridLayout cannot have more than " + mMaxChildren + " direct children");
         }
 
         super.addView(child, index);
@@ -135,8 +142,8 @@ public class BoxGridLayout extends ViewGroup {
 
     @Override
     public void addView(View child, int index, LayoutParams params) {
-        if (getChildCount() > mMaxChildren-1) {
-            throw new IllegalStateException("BoxGridLayout cannot have more than "+mMaxChildren+" direct children");
+        if (getChildCount() > mMaxChildren - 1) {
+            throw new IllegalStateException("BoxGridLayout cannot have more than " + mMaxChildren + " direct children");
         }
 
         super.addView(child, index, params);
@@ -144,8 +151,8 @@ public class BoxGridLayout extends ViewGroup {
 
     @Override
     public void addView(View child, LayoutParams params) {
-        if (getChildCount() > mMaxChildren-1) {
-            throw new IllegalStateException("BoxGridLayout cannot have more than "+mMaxChildren+" direct children");
+        if (getChildCount() > mMaxChildren - 1) {
+            throw new IllegalStateException("BoxGridLayout cannot have more than " + mMaxChildren + " direct children");
         }
 
         super.addView(child, params);
@@ -153,10 +160,40 @@ public class BoxGridLayout extends ViewGroup {
 
     @Override
     public void addView(View child, int width, int height) {
-        if (getChildCount() > mMaxChildren-1) {
-            throw new IllegalStateException("BoxGridLayout cannot have more than "+mMaxChildren+" direct children");
+        if (getChildCount() > mMaxChildren - 1) {
+            throw new IllegalStateException("BoxGridLayout cannot have more than " + mMaxChildren + " direct children");
         }
 
         super.addView(child, width, height);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+
+        switch (event.getAction()) {
+            case (MotionEvent.ACTION_DOWN):
+                Log.d(DEBUG_TAG, "Action was DOWN");
+
+
+                return true;
+            case (MotionEvent.ACTION_MOVE):
+                Log.d(DEBUG_TAG, "Action was MOVE");
+
+                return true;
+            case (MotionEvent.ACTION_UP):
+                Log.d(DEBUG_TAG, "Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL):
+                Log.d(DEBUG_TAG, "Action was CANCEL");
+
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE):
+                Log.d(DEBUG_TAG, "Movement occurred outside bounds " +
+                        "of current screen element");
+                return true;
+            default:
+                return super.onTouchEvent(event);
+        }
     }
 }
